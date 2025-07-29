@@ -213,8 +213,11 @@ RUN --mount=type=cache,target=${UV_CACHE_DIR},id=python-cache \
     && apt-get update \
     && apt-get install --yes --quiet --no-install-recommends ${BUILD_PACKAGES} \
   && echo "Installing Python requirements" \
-    && uv export --quiet --no-dev --all-extras --format requirements-txt --output-file requirements.txt \
-    && uv pip install --system --no-python-downloads --python-preference system --requirements requirements.txt \
+    # Solution: Téléchargement manuel de zxing-cpp
+    && curl -L https://github.com/paperless-ngx/builder/releases/download/zxing-2.3.0/zxing_cpp-2.3.0-cp312-cp312-linux_$(uname -m).whl -o /tmp/zxing.whl \
+    && pip install /tmp/zxing.whl \
+    && rm /tmp/zxing.whl \
+    && uv pip install --system --no-python-downloads --python-preference system -r <(uv export --no-dev --all-extras) \
   && echo "Installing NLTK data" \
     && python3 -W ignore::RuntimeWarning -m nltk.downloader -d "/usr/share/nltk_data" snowball_data \
     && python3 -W ignore::RuntimeWarning -m nltk.downloader -d "/usr/share/nltk_data" stopwords \
@@ -223,11 +226,7 @@ RUN --mount=type=cache,target=${UV_CACHE_DIR},id=python-cache \
     && apt-get --yes purge ${BUILD_PACKAGES} \
     && apt-get --yes autoremove --purge \
     && apt-get clean --yes \
-    && rm --recursive --force --verbose *.whl \
-    && rm --recursive --force --verbose /var/lib/apt/lists/* \
-    && rm --recursive --force --verbose /tmp/* \
-    && rm --recursive --force --verbose /var/tmp/* \
-    && rm --recursive --force --verbose /var/cache/apt/archives/* \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/* \
     && truncate --size 0 /var/log/*log
 
 # copy backend
