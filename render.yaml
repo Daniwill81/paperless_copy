@@ -45,3 +45,5 @@ services:
     plan: free
     ipAllowList: []
     maxmemoryPolicy: noeviction
+    # Ajoutez cette ligne pour forcer Redis à écouter sur toutes les interfaces
+    command: redis-server --bind 0.0.0.0 --protected-mode no
