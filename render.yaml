@@ -6,8 +6,7 @@ services:
       dockerfilePath: ./Dockerfile
     plan: free
     envVars:
-      - key: PAPERLESS_REDIS
-        value: redis://default:Ax1Tp6ykiYGt8ZDqN7NEpK648R6B01Wm@redis-11089.c8.us-east-1-2.ec2.redns.redis-cloud.com:11089
+      # NE PAS redéfinir PAPERLESS_REDIS ici, elle est déjà dans le Dockerfile
       - key: PAPERLESS_DBHOST
         value: ep-fancy-glade-aewqrzlm-pooler.c-2.us-east-2.aws.neon.tech
       - key: PAPERLESS_DBNAME
@@ -35,3 +34,4 @@ services:
       - key: USERMAP_GID
         value: "1000"
     healthCheckPath: /api/
+    
