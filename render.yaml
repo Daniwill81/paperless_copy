@@ -7,10 +7,7 @@ services:
     plan: free
     envVars:
       - key: PAPERLESS_REDIS
-        fromService:
-          type: redis
-          name: paperless-redis
-          property: connectionString
+        value: redis://default:Ax1Tp6ykiYGt8ZDqN7NEpK648R6B01Wm@redis-11089.c8.us-east-1-2.ec2.redns.redis-cloud.com:11089
       - key: PAPERLESS_DBHOST
         value: ep-fancy-glade-aewqrzlm-pooler.c-2.us-east-2.aws.neon.tech
       - key: PAPERLESS_DBNAME
@@ -38,12 +35,3 @@ services:
       - key: USERMAP_GID
         value: "1000"
     healthCheckPath: /api/
-    numInstances: 1
-
-  - type: redis
-    name: paperless-redis
-    plan: free
-    ipAllowList: []
-    maxmemoryPolicy: noeviction
-    # Ajoutez cette ligne pour forcer Redis à écouter sur toutes les interfaces
-    command: redis-server --bind 0.0.0.0 --protected-mode no
