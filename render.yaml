@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: paperless-ngx
+    env: docker
+    docker:
+      dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: PAPERLESS_REDIS
+        fromService:
+          type: redis
+          name: paperless-redis
+          property: connectionString
+      - key: PAPERLESS_DBHOST
+        value: ep-fancy-glade-aewqrzlm-pooler.c-2.us-east-2.aws.neon.tech
+      - key: PAPERLESS_DBNAME
+        value: paperless
+      - key: PAPERLESS_DBUSER
+        value: neondb_owner
+      - key: PAPERLESS_DBPASS
+        value: npg_p32MubcgWQJG
+      - key: PAPERLESS_DBPORT
+        value: "5432"
+      - key: PAPERLESS_ENABLE_BARCODES
+        value: "0"
+      - key: PAPERLESS_OCR_LANGUAGE
+        value: fra
+      - key: PAPERLESS_SECRET_KEY
+        value: une-clé-très-longue-et-qqqqqqqqqqqqqqqqwertyuiopasdfghjkzxcvbnm_aléatoire
+      - key: PAPERLESS_TIME_ZONE
+        value: Africa/Benin
+      - key: PAPERLESS_ALLOWED_HOSTS
+        value: *.onrender.com
+      - key: PAPERLESS_CSRF_TRUSTED_ORIGINS
+        value: https://*.onrender.com
+      - key: USERMAP_UID
+        value: "1000"
+      - key: USERMAP_GID
+        value: "1000"
+    healthCheckPath: /api/
+    numInstances: 1
+
+  - type: redis
+    name: paperless-redis
+    plan: free
+    ipAllowList: []
+    maxmemoryPolicy: noeviction
